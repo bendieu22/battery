@@ -96,7 +96,7 @@ def energy_consumption_cell(csv_path, number_series_cells, number_parallel_cells
         U_list.append(U2)
         I_list.append(I2)
 
-        energy_consumed += power_demand/3600000
+        energy_consumed += float(power_demand/3600000)
 
         new_SOC_2= SOC_now[-1] - ((I2/3600)/(overall_capacity_cell))*100 #update the SOC value 
         SOC_now.append(float(new_SOC_2))
@@ -130,6 +130,6 @@ if __name__ == "__main__":
 
         file_path = Path("Cell_data") / args.file
         
-        print(energy_consumption_cell(file_path, 110, 2, 1, 1, 1, 100, 0, 0, 0))
+        print(energy_consumption_cell(file_path, 110, 2, 1, 1, 1, 100, 1502, 0, 0))
 
 

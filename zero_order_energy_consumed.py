@@ -39,7 +39,6 @@ def energy_consumption_cell(csv_path, number_series_cells, number_parallel_cells
     t_now = 0
     energy_consumed=0
     overall_capacity_cell = number_parallel_cells*overall_capacity(csv_path)
-    capacity_cell = overall_capacity(csv_path)
     U_list = []
     I_list = []
     distance_list = [0]
@@ -78,7 +77,7 @@ def energy_consumption_cell(csv_path, number_series_cells, number_parallel_cells
     t_list = list(range(1,t_now+1))  
     
     
-    print(t_now, energy_consumed,SOC_now[-1])
+    #print(t_now, energy_consumed,SOC_now[-1])
     return {
         'distance': distance_list,
         'SOC': SOC_now,
@@ -126,9 +125,13 @@ if __name__ == "__main__":
         choices=["current", "voltage", "soc"], 
         help="The type of plot to generate: 'current', 'voltage', or 'soc'"
     )
+    parser.add_argument(
+        "--file", 
+        help="Filename to plot (e.g., CELL_E_TEST_00.csv). If omitted, plots all files in Cell_data folder.",
+        default=None
+    )
     args = parser.parse_args()
-
-    csv_path = "Cell_data/CELL_E_TEST_00.csv"  
+ 
     n_series = 110
     n_parallel = 2
     r0_coeff = 1.0
@@ -139,11 +142,13 @@ if __name__ == "__main__":
     angle = 0
 
     print(f"Running simulation to generate {args.plot_type} plot...")
+    
+    file_path = Path("Cell_data") / args.file
 
     # 5. Run the simulation (Required for any plot)
     try:
         results = energy_consumption_cell(
-            csv_path, n_series, n_parallel, r0_coeff, 
+            file_path, n_series, n_parallel, r0_coeff, 
             ocv_coeff, initial_soc, mass, wind, angle
         )
     except Exception as e:
