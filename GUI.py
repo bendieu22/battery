@@ -8,7 +8,8 @@ import power_from_WLTP
 import plot_tests
 import SoC_computation
 import SoC_0thorder_parameters_link
-#import SOCPolarization
+import socpolarization
+import energyconsumptionfirstorder
 
 files = plot_tests.get_cell_files()
 
@@ -177,10 +178,13 @@ col_1, col_2 = st.columns(2)
 with col_1:
     
     fig_R0_SOC = SoC_0thorder_parameters_link.plot_R0_SOC(filepath, R0_multiplier)
-    fig_OCV_SOC = SoC_0thorder_parameters_link.plot_ocv_soc_full_link(filepath, OCV_multipler)
     st.pyplot(fig_R0_SOC)
+    fig_OCV_SOC = SoC_0thorder_parameters_link.plot_ocv_soc_full_link(filepath, OCV_multipler)
+    
     st.pyplot(fig_OCV_SOC)
 
-# with col_2:
-#     fig_R1_SOC= SOCPolarization.plot_SOC_R1(filepath, R1_multiplier)
-#     st.pyplot(fig_R1_SOC)
+with col_2:
+    fig_R1_SOC= socpolarization.plot_SOC_R1(filepath, R1_multiplier)
+    st.pyplot(fig_R1_SOC)
+    energy = energyconsumptionfirstorder.energy_consumption_cell(filepath, N_series, N_parallel, R0_multiplier, R1_multiplier, OCV_multipler, SOC, total_mass, wind_ms, theta_rad)[1]
+    st.write(" The energy that is consumable in the 1st order model is: ", str(round(energy, 1)), "kW")    

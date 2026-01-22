@@ -162,14 +162,14 @@ if __name__ == "__main__":
     df_merged = pd.merge(df_results, df_soc, on=["file", "pulse_id"], how="inner")
 
     # ---------------- Plot R_pol vs SoC ----------------
-def plot_SOC_R1(cell_name, coefficient=1.0):
+def plot_SOC_R1(csv_path, coefficient=1.0):
     """
     cell_name: e.g. 'CELL_E_TEST_01'
     coefficient: scaling factor for R_pol
     """
 
-    csv_path = Path(DATA_FOLDER) / f"{cell_name}.csv"
-
+    # csv_path = Path(DATA_FOLDER) / f"{cell_name}.csv"
+    cell_name = csv_path.stem
     if not csv_path.exists():
         raise FileNotFoundError(f"{csv_path} not found")
 
@@ -190,6 +190,7 @@ def plot_SOC_R1(cell_name, coefficient=1.0):
         raise ValueError("No data after merge — check pulse indexing")
 
     # --- plot ---
+    fig, ax = figsize(8,5)
     plt.figure(figsize=(8,5))
     plt.plot(
         df["SoC"],

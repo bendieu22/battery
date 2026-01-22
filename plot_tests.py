@@ -34,7 +34,7 @@ def plot_file(csv_path):
     axs[1].grid(True)
 
     # --- Steps vs Time (discrete)
-    axs[2].step(df["Total Time"], df["Step"], where="post")
+    axs[2].plot(df["Total Time"], df["Step"],linestyle='None',marker='.', markersize=2)
     axs[2].set_xlabel("Total Time (s)")
     axs[2].set_ylabel("Step")
     #axs[2].set_xlim(3000,6000)
@@ -42,8 +42,7 @@ def plot_file(csv_path):
     axs[2].grid(True)
 
     fig.suptitle(csv_path.stem)
-    plt.tight_layout(rect=[0, 0, 1, 0.95])
-    plt.show()
+    return fig
 
 
 def plot_all_files():
