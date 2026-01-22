@@ -3,6 +3,7 @@ import pandas as pd
 from pathlib import Path
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
+import argparse
 
 # ---------------- Parameters ----------------
 DATA_FOLDER = "Cell_data"
@@ -152,14 +153,6 @@ def extract_step9_plateaus_fixed_tau(data_folder):
 
     return df_results
 
-# ---------------- Run extraction ----------------
-if __name__ == "__main__":
-    # ---------------- Run extraction ----------------
-    df_results = extract_step9_plateaus_fixed_tau(DATA_FOLDER)
-    df_soc = soc_df_all(DATA_FOLDER)
-
-    # ---------------- Merge SoC with parameters ----------------
-    df_merged = pd.merge(df_results, df_soc, on=["file", "pulse_id"], how="inner")
 
     # ---------------- Plot R_pol vs SoC ----------------
 def plot_SOC_R1(csv_path, coefficient=1.0):
@@ -168,7 +161,7 @@ def plot_SOC_R1(csv_path, coefficient=1.0):
     coefficient: scaling factor for R_pol
     """
 
-    # csv_path = Path(DATA_FOLDER) / f"{cell_name}.csv"
+    csv_path = Path(csv_path) 
     cell_name = csv_path.stem
     if not csv_path.exists():
         raise FileNotFoundError(f"{csv_path} not found")
@@ -207,7 +200,26 @@ def plot_SOC_R1(csv_path, coefficient=1.0):
     fig.tight_layout()
     return fig
 
-#print (plot_SOC_R1("CELL_E_TEST_00", 1))
+# ---------------- Main Execution ----------------
+if __name__ == "__main__":
+    
+    # 1. Setup Argparse
+    parser = argparse.ArgumentParser(description="Plot R1 vs SOC for a specific cell file")
+    
+    parser.add_argument(
+        "--file", 
+        required=True, # Force user to provide a file
+        help="Path to the cell CSV file (e.g., Cell_data/CELL_E_TEST_00.csv)"
+    )
+
+    args = parser.parse_args()
+    try:
+        plot_SOC_R1(args.file)
+        plt.show()
+    except Exception as e:
+        print(f"Error: {e}")
+
+
 
 
 """def plot_SOC_C1():
