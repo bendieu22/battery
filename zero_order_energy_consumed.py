@@ -43,7 +43,7 @@ def energy_consumption_cell(csv_path, number_series_cells, number_parallel_cells
     U_list = []
     I_list = []
     distance_list = [0]
-    while SOC_now[-1]>5:
+    while SOC_now[-1]>0.1:
         power_demand= p_batt[t_now%1801]
         distance_list.append(distance_demand[t_now%1801]+distance_list[-1])
         ocv_cell = ocv_interp(SOC_now[-1])

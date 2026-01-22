@@ -116,6 +116,20 @@ def energy_consumption_cell(csv_path, number_series_cells, number_parallel_cells
     return t_now, energy_consumed, SOC_now[-1]
 
 if __name__ == "__main__":
-    print(energy_consumption_cell("Cell_data/CELL_E_TEST_00.csv", 110, 2, 1, 1, 1, 100, 100, 30, 20))
+    parser = argparse.ArgumentParser(description="Plot Cell Data Files")
+    
+    parser.add_argument(
+        "--file", 
+        help="Filename to plot (e.g., CELL_E_TEST_00.csv). If omitted, plots all files in Cell_data folder.",
+        default=None
+    )
+    
+    args = parser.parse_args()
+
+    if args.file:
+
+        file_path = Path("Cell_data") / args.file
+        
+        print(energy_consumption_cell(file_path, 110, 2, 1, 1, 1, 100, 0, 0, 0))
 
 
