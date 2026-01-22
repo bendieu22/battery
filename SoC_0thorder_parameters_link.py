@@ -191,8 +191,6 @@ def plot_R0_soc_full_link(csv_path, R0_multiplier, charge = False):
     fig.tight_layout()
     return fig
 
-#if __name__ == "__main__":
-    plot_R0_soc_full_link('Cell_data/CELL_E_TEST_04.csv',1)
 if __name__ == "__main__":
     
     # 1. Setup Argparse
