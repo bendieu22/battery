@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
-import pathlib as Path
+from pathlib import Path
+import argparse
 
 # Get the SoC before each spike of current, assuming it is at 100% before the first one. 
 
@@ -59,4 +60,18 @@ def soc_by_spike(csv_path) :
     return {cells_dictionary[str(csv_path)]: soc_list}
 
 if __name__ == "__main__":
-    print(soc_by_spike("Cell_data/CELL_E_TEST_00.csv"))
+    parser = argparse.ArgumentParser(description="Plot Cell Data Files")
+    
+    parser.add_argument(
+        "--file", 
+        help="Filename to plot (e.g., CELL_E_TEST_00.csv). If omitted, plots all files in Cell_data folder.",
+        default=None
+    )
+    
+    args = parser.parse_args()
+
+    if args.file:
+
+        file_path = Path("Cell_data") / args.file
+        
+        print(soc_by_spike(file_path))

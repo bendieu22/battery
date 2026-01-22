@@ -32,9 +32,16 @@ def reset_defaults():
 
 
 # --- SIDEBAR INPUTS ---
-st.sidebar.title("Car model Parameters")
+st.sidebar.title("Cell Studied")
 
-st.sidebar.button("Reset to Defaults", on_click=reset_defaults)
+selected_file = st.sidebar.selectbox(
+    "Choose a cell:", 
+    [f.stem for f in files],
+    index=0,
+    key="cell_selector"
+)
+
+st.sidebar.title("Car model Parameters")
 
 def get_float_input(label, default_value, key_name):
     val = st.sidebar.text_input(label, value=str(default_value), key=key_name)
@@ -48,12 +55,6 @@ theta_deg = get_float_input('Angle theta (degrees)', 0.0, "theta_input")
 wind_kmh = get_float_input('Wind speed (km/h)', 0.0, "wind_input")
 additional_mass = get_float_input('Additional mass (kg)', 0.0, "mass_input")
 
-selected_file = st.sidebar.selectbox(
-    "Choose a cell:", 
-    [f.stem for f in files],
-    index=0,
-    key="cell_selector"
-)
 filepath = files[[f.stem for f in files].index(selected_file)]
 capacity = round(SoC_computation.overall_capacity(filepath), 3)
 
@@ -95,33 +96,40 @@ pack_voltage = N_series * pack_voltage_real
 pack_capacity_kwh = results_cell["energyconsumed"]
 pack_mass_est = (N_series * N_parallel * 0.5) * 1.3 # Assuming 0.5kg/cell * 1.3 packaging factor
 
+st.sidebar.button("Reset to Defaults", on_click=reset_defaults)
 
 # --- BODY ---
 
 results = power_from_WLTP.run_simulation(
     mass=total_mass, 
     theta=theta_rad, 
-    wind_speed=wind_ms, 
+    wind_speed=wind_kmh, 
 )
 
 st.write("### Simulation Results")
-col_plots, col_info = st.columns([2, 1], gap="medium")
 
+st.write("#### Cell plots and parameters")
+fig_cell = plot_tests.plot_file(filepath)
+st.pyplot(fig_cell)
+
+st.write("The capacity of this cell is ", str(capacity), "Ah.")
+
+col_plots, col_info = st.columns([2, 1], gap="medium")
 with col_plots:
-    st.write("#### 1. WLTP Speed Profile")
+    st.write("#### WLTP Speed Profile")
     fig_speed = power_from_WLTP.plot_speed(results) 
     st.pyplot(fig_speed)
 
-    st.write("#### 2. Power at Wheels")
+    st.write("#### Power at Wheels")
     fig_total = power_from_WLTP.plot_total_power(results)
     st.pyplot(fig_total)
 
-    st.write("#### 3. Battery Power (incl. Losses & Aux)")
+    st.write("####  Battery Power (incl. Losses & Aux)")
     fig_batt = power_from_WLTP.plot_battery_power(results)
     st.pyplot(fig_batt)
 
     if st.checkbox("Show Power Components Breakdown"):
-        st.write("#### 3.bis. Power Components")
+        st.write("####  Power Components")
         fig_comp = power_from_WLTP.plot_power_components(results)
         st.pyplot(fig_comp)
 
@@ -147,15 +155,7 @@ with col_info:
         st.write(f"- **Total Mass:** {total_mass} kg")
     
 
-
-st.write("#### 4. Cell plots and parameters")
-fig_cell = plot_tests.plot_file(filepath)
-st.pyplot(fig_cell)
-
-
-st.write("The capacity of this cell is ", str(capacity), "Ah.")
-
-st.write("#### 5. Energy Consumption (0th Order)")
+st.write("####  Energy Consumption (0th Order)")
 
 col1, col2, col3 = st.columns(3)
 col1.metric("Pack Config", f"{N_series}S {N_parallel}P")
@@ -171,12 +171,12 @@ st.pyplot(fig_distance_SOC)
 st.pyplot(fig_voltage_time)
 #st.pyplot(fig_current_time)
 
-st.write("#### 6. 0th Order vs 1st Order model")
+st.write("#### 0th Order vs 1st Order model")
 
 col_1, col_2 = st.columns(2)
 
 with col_1:
-    
+    st.write("### 0th Order")
     fig_R0_SOC = SoC_0thorder_parameters_link.plot_R0_SOC(filepath, R0_multiplier)
     st.pyplot(fig_R0_SOC)
     fig_OCV_SOC = SoC_0thorder_parameters_link.plot_ocv_soc_full_link(filepath, OCV_multipler)
@@ -184,6 +184,7 @@ with col_1:
     st.pyplot(fig_OCV_SOC)
 
 with col_2:
+    st.write("### 1st Order")
     fig_R1_SOC= socpolarization.plot_SOC_R1(filepath, R1_multiplier)
     st.pyplot(fig_R1_SOC)
     energy = energyconsumptionfirstorder.energy_consumption_cell(filepath, N_series, N_parallel, R0_multiplier, R1_multiplier, OCV_multipler, SOC, total_mass, wind_ms, theta_rad)[1]

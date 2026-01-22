@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
+import argparse
 
 #the 5 csv_paths for the five test files are as follows: 
 # 'Cell_data/CELL_E_TEST_00.csv' 
@@ -42,10 +43,11 @@ def plot_file(csv_path):
     axs[2].grid(True)
 
     fig.suptitle(csv_path.stem)
+    fig.tight_layout()
     return fig
 
 
-def plot_all_files():
+#def plot_all_files():
     data_folder = Path("Cell_data")
     files = sorted(data_folder.glob("*.csv"))
     for file in files:
@@ -58,4 +60,22 @@ def get_cell_files():
 
 
 if __name__ == "__main__":
-    plot_all_files()
+
+    parser = argparse.ArgumentParser(description="Plot Cell Data Files")
+    
+    parser.add_argument(
+        "--file", 
+        help="Filename to plot (e.g., CELL_E_TEST_00.csv). If omitted, plots all files in Cell_data folder.",
+        default=None
+    )
+    
+    args = parser.parse_args()
+
+    if args.file:
+
+        file_path = Path("Cell_data") / args.file
+        
+        print(f"Plotting {file_path}...")
+        plot_file(file_path)
+
+    plt.show()

@@ -189,24 +189,23 @@ def plot_SOC_R1(csv_path, coefficient=1.0):
     if df.empty:
         raise ValueError("No data after merge — check pulse indexing")
 
-    # --- plot ---
-    fig, ax = figsize(8,5)
-    plt.figure(figsize=(8,5))
-    plt.plot(
+    fig, ax = plt.subplots(figsize=(9,6))
+    ax.plot(
         df["SoC"],
         df["R_pol"] * coefficient,
         "o-",
-        label=f"{cell_name}"
+        label=f"{cell_name}",
+        linestyle = 'None'
     )
 
-    plt.xlabel("State of Charge (%)")
-    plt.ylabel("R_pol (Ω)")
-    plt.title("Polarization resistance vs SoC")
-    plt.gca().invert_xaxis()
-    plt.grid(True)
-    plt.legend()
-    plt.tight_layout()
-    plt.show()
+    ax.set_xlabel("State of Charge (%)")
+    ax.set_ylabel("R_pol (Ω)")
+    ax.set_title("Polarization resistance vs SoC")
+    ax.invert_xaxis()
+    ax.grid(True)
+    ax.legend()
+    fig.tight_layout()
+    return fig
 
 #print (plot_SOC_R1("CELL_E_TEST_00", 1))
 

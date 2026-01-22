@@ -4,6 +4,7 @@ from pathlib import Path
 from scipy.interpolate import PchipInterpolator
 import numpy as np
 from R0_OCV_computation import *
+import argparse 
 
 
 
@@ -125,8 +126,8 @@ def plot_R0_SOC(csv_path, R0_multiplier):
     ax.set_ylabel("Internal Resistance (Ohms)")
     ax.set_title("R0 vs SoC (Charge vs Discharge)")
     ax.grid(True)
-
-    plt.show()
+    fig.tight_layout()
+    return fig
     
 
 # Interpolate OCV as a function of SoC using a shape-preserving cubic interpolator (PCHIP).
@@ -159,13 +160,21 @@ def interpolate_R0(csv_path, R0_query, charge = False):
 
 
 # Evaluate the interpolated OCV vs SoC over many SoC values (0–100%) and plot the resulting curve.
-def plot_ocv_soc_full_link(csv_path, OCV_multiplier,charge = False):
-    soc_points = np.linspace(0,100,100)
+def plot_ocv_soc_full_link(csv_path, OCV_multiplier, charge=False):
+    soc_points = np.linspace(0, 100, 100)
     ocv_points = []
     for point in soc_points:
-        ocv_points.append(interpolate_ocv(csv_path, point, charge)*OCV_multiplier)
-    plt.plot(soc_points,ocv_points, linestyle = "None", marker = ".")
-    plt.show()
+        ocv_points.append(interpolate_ocv(csv_path, point, charge) * OCV_multiplier)
+    
+    fig, ax = plt.subplots(figsize=(9, 6))
+    ax.plot(soc_points, ocv_points, linestyle="None", marker=".")
+    ax.set_xlabel("State of Charge (%)")
+    ax.set_ylabel("OCV (V)")
+    ax.set_title("OCV vs SoC")
+    ax.grid(True)
+    fig.tight_layout()
+    return fig
+
     
 # Evaluate the interpolated R0 for discharge vs SoC over many SoC values (0–100%) and plot the resulting curve.
 def plot_R0_soc_full_link(csv_path, R0_multiplier, charge = False):
@@ -173,8 +182,57 @@ def plot_R0_soc_full_link(csv_path, R0_multiplier, charge = False):
     R0_points = []
     for point in soc_points:
         R0_points.append(interpolate_R0(csv_path, point, charge)*R0_multiplier)
-    plt.plot(soc_points,R0_points, linestyle = "None", marker = ".")
-    plt.show()
+    fig, ax = plt.subplots(figsize=(9, 6))
+    ax.plot(soc_points, R0_points, linestyle="None", marker=".")
+    ax.set_xlabel("State of Charge (%)")
+    ax.set_ylabel("Internal Resistance (Ohms)")
+    ax.set_title(f"R0 vs SoC (Full Link) - {Path(csv_path).name}")
+    ax.grid(True)
+    fig.tight_layout()
+    return fig
 
-if __name__ == "__main__":
+#if __name__ == "__main__":
     plot_R0_soc_full_link('Cell_data/CELL_E_TEST_04.csv',1)
+if __name__ == "__main__":
+    
+    # 1. Setup Argparse
+    parser = argparse.ArgumentParser(description="Plot OCV and R0 Analysis")
+    
+    # Plot Type
+    parser.add_argument(
+        "plot_type", 
+        choices=["OCV_points", "R0_points", "OCV_full", "R0_full"], 
+        help="Select plot type: 'OCV_points' (Raw Points), 'R0_points' (Raw Points), 'OCV_full' (Interpolated Curve), 'R0_full' (Interpolated Curve)"
+    )
+
+    # File Path
+    parser.add_argument(
+        "--file", 
+        required=True,
+        help="Path to the cell CSV file (e.g., Cell_data/CELL_E_TEST_04.csv)"
+    )
+    
+    # Multiplier (defaults to 1.0)
+    parser.add_argument(
+        "--mult", 
+        type=float, 
+        default=1.0, 
+        help="Multiplier for R0 or OCV values (default: 1.0)"
+    )
+
+    args = parser.parse_args()
+
+    if not Path(args.file).exists():
+        print(f"Error: File '{args.file}' not found.")
+        exit()
+
+    if args.plot_type == "OCV_points":
+        plot_OCV_SOC(args.file, args.mult)
+    elif args.plot_type == "R0_points":
+        plot_R0_SOC(args.file, args.mult)
+    elif args.plot_type == "OCV_full":
+        plot_ocv_soc_full_link(args.file, args.mult)
+    elif args.plot_type == "R0_full":
+        plot_R0_soc_full_link(args.file, args.mult)
+
+    plt.show()

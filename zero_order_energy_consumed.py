@@ -1,6 +1,8 @@
 from SoC_0thorder_parameters_link import *
 from power_from_WLTP import *
 import math
+import argparse
+import matplotlib.pyplot as plt
 
 def energy_consumption_cell(csv_path, number_series_cells, number_parallel_cells, R0_coefficient, OCV_coefficient, SoC, mass, wind, angle):
 
@@ -88,7 +90,7 @@ def energy_consumption_cell(csv_path, number_series_cells, number_parallel_cells
 
 def plot_distance_SOC(results):
     fig, ax = plt.subplots(figsize=(10, 4))
-    ax.plot(results["distance"], results["SOC"], color='black')
+    ax.plot(results["distance"], results["SOC"], color='black', linestyle = 'None', marker=".",markersize=1)
     ax.set_title("SOC over a distance travelled")
     ax.set_xlabel('distance (m)')
     ax.set_ylabel("SOC (%)")
@@ -96,7 +98,7 @@ def plot_distance_SOC(results):
     return fig
 def plot_voltage_time(results):
     fig, ax = plt.subplots(figsize=(10, 4))
-    ax.plot(results["time"], results["voltages"], color='black')
+    ax.plot(results["time"], results["voltages"], color='black', linestyle = 'None', marker=".",markersize=1)
     ax.set_title("voltage over time")
     ax.set_ylabel('voltage (V)')
     ax.set_xlabel("time (s)")
@@ -104,12 +106,57 @@ def plot_voltage_time(results):
     return fig
 def plot_current_time(results):
     fig, ax = plt.subplots(figsize=(10, 4))
-    ax.plot(results["time"], results["Currents"], color='black')
+    ax.plot(results["time"], results["Currents"], color='black', linestyle = 'None', marker=".", markersize=1)
     ax.set_title("current over time")
     ax.set_ylabel('current (A)')
     ax.set_xlabel("time (s)")
     ax.grid(True)
     return fig
 
+# if __name__ == "__main__":
+#     energy_consumption_cell('Cell_data/CELL_E_TEST_00.csv',110,2,1,1,100,1502,0,0)
+
 if __name__ == "__main__":
-    energy_consumption_cell('Cell_data/CELL_E_TEST_00.csv',110,2,1,1,100,1502,0,0)
+    # 2. Set up the argument parser
+    parser = argparse.ArgumentParser(description="Run Battery Simulation and Select Plot")
+    
+    # This creates a required argument where you must type one of the choices
+    parser.add_argument(
+        "plot_type", 
+        choices=["current", "voltage", "soc"], 
+        help="The type of plot to generate: 'current', 'voltage', or 'soc'"
+    )
+    args = parser.parse_args()
+
+    csv_path = "Cell_data/CELL_E_TEST_00.csv"  
+    n_series = 110
+    n_parallel = 2
+    r0_coeff = 1.0
+    ocv_coeff = 1.0
+    initial_soc = 100
+    mass = 1502
+    wind = 0
+    angle = 0
+
+    print(f"Running simulation to generate {args.plot_type} plot...")
+
+    # 5. Run the simulation (Required for any plot)
+    try:
+        results = energy_consumption_cell(
+            csv_path, n_series, n_parallel, r0_coeff, 
+            ocv_coeff, initial_soc, mass, wind, angle
+        )
+    except Exception as e:
+        print(f"Error running simulation: {e}")
+        exit()
+
+    # 6. Check which option the user chose and run only that plot
+    if args.plot_type == "current":
+        plot_current_time(results)
+    elif args.plot_type == "voltage":
+        plot_voltage_time(results)
+    elif args.plot_type == "soc":
+        plot_distance_SOC(results)
+
+    # 7. Show the chosen plot
+    plt.show()

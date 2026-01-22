@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import argparse
 
 def load_data():
     data = pd.read_csv('WLTC_data.csv')
@@ -28,7 +29,7 @@ def run_simulation(mass, theta, wind_speed):
 
     #initialising the lists and variables
     power_acc_only = []
-    power_acc_aero = []
+    power_acc_roll = []
     power_acc_aero_roll = []
     power_total = []
     p_mech = []
@@ -38,7 +39,7 @@ def run_simulation(mass, theta, wind_speed):
     for time in range(len(time_values)):
         if time == 0:
             power_acc_only.append(0)
-            power_acc_aero.append(0)
+            power_acc_roll.append(0)
             power_acc_aero_roll.append(0)
             power_total.append(0)
             p_mech.append(0)
@@ -55,13 +56,13 @@ def run_simulation(mass, theta, wind_speed):
             force_slope = mass * g * np.sin(theta)
             
             # Cumulative Power
-            p1 = force_acc * v
-            p2 = (force_acc + force_aero) * v # additional forces that affect the Energy 
+            #p1 = force_acc * v
+            p2 = (force_acc + force_roll) * v # additional forces that affect the Energy 
             p3 = (force_acc + force_aero + force_roll) * v #taken into account in the WLTP 
             p4 = (force_acc + force_aero + force_roll + force_slope) * v # additional forces that affect the Energy 
             
-            power_acc_only.append(p1)
-            power_acc_aero.append(p2)
+           # power_acc_only.append(p1)
+            power_acc_roll.append(p2)
             power_acc_aero_roll.append(p3)
             power_total.append(p4)
             #convert power at the wheels to mechanical power
@@ -81,7 +82,7 @@ def run_simulation(mass, theta, wind_speed):
         "p_mech": p_mech,
         "p_batt": p_batt,
         "power_acc_only": power_acc_only,
-        "power_acc_aero": power_acc_aero,
+        "power_acc_roll": power_acc_roll,
         "power_acc_aero_roll": power_acc_aero_roll,
         "energy": energy #in Wh
     }
@@ -91,7 +92,6 @@ These are the plots callable from the GUI.py
 Each plot of the powers represent a different step of the power gotten for the WLTP
 
 """
-
 def plot_speed(results):
     fig, ax = plt.subplots(figsize=(10, 4))
     ax.plot(results["time"], results["speed_ms"], color='black', linestyle = 'None', marker = '.')
@@ -127,12 +127,40 @@ def plot_battery_power(results):
 def plot_power_components(results):
     fig, ax = plt.subplots(figsize=(10, 4))
     t = results["time"]
-    ax.plot(t, results["power_total"], label='Total', color='red', alpha=0.9, linestyle = 'None', marker = '.')
+    ax.plot(t, results["power_total"], label='Total', color='blue', alpha=0.9, linestyle = 'None', marker = '.')
     ax.plot(t, results["power_acc_aero_roll"], label='+ Rolling', color='green', alpha=0.8, linestyle = 'None', marker = '.')
-    ax.plot(t, results["power_acc_aero"], label='+ Aero', color='orange', alpha=0.7, linestyle = 'None', marker = '.')
-    ax.plot(t, results["power_acc_only"], label='Acc Only', color='blue', alpha=0.6, linestyle = 'None', marker = '.')
+    ax.plot(t, results["power_acc_roll"], label='+ Roll', color='magenta', alpha=0.7, linestyle = 'None', marker = '.')
+    #ax.plot(t, results["power_acc_only"], label='Acc Only', color='blue', alpha=0.6, linestyle = 'None', marker = '.')
     
     ax.set_title("Evolution of Power Components")
     ax.legend()
     ax.grid(True)
     return fig
+
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser(description="Run WLTP Simulation")
+
+    parser.add_argument(
+        "plot_type", 
+        choices=["speed", "total", "mechanical", "battery", "components"], 
+        help="Select which plot to display"
+    )
+
+    args = parser.parse_args()
+    
+    results = run_simulation(mass=1502, theta=0, wind_speed=0)
+    
+    if args.plot_type == "speed":
+        plot_speed(results)
+    elif args.plot_type == "total":
+        plot_total_power(results)
+    elif args.plot_type == "mechanical":
+        plot_mechanical_power(results)
+    elif args.plot_type == "battery":
+        plot_battery_power(results)
+    elif args.plot_type == "components":
+        plot_power_components(results)
+
+    plt.show()

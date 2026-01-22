@@ -1,5 +1,6 @@
 import pandas as pd
 from pathlib import Path
+import argparse
 
 #This code identifies the internal resistance that is associated with the current spiking down (discharging R0)
 #This happens during step 7 of the CSV files where current typically spikes from 0 to -70.4A
@@ -81,4 +82,18 @@ def identify_R0_OCV(csv_path, charge = False):
     return results
 
 if __name__ == "__main__":
-    print(identify_R0_OCV('Cell_data/CELL_E_TEST_00.csv'))
+    parser = argparse.ArgumentParser(description="Plot Cell Data Files")
+    
+    parser.add_argument(
+        "--file", 
+        help="Filename to plot (e.g., CELL_E_TEST_00.csv). If omitted, plots all files in Cell_data folder.",
+        default=None
+    )
+    
+    args = parser.parse_args()
+
+    if args.file:
+
+        file_path = Path("Cell_data") / args.file
+        
+        print(identify_R0_OCV(file_path))
