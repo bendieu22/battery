@@ -28,9 +28,6 @@ def plot_file(csv_path):
     axs[1].plot(df["Total Time"],df["Current"],linestyle='None',marker='.', markersize=2)
     axs[1].set_xlabel("Total Time (s)")
     axs[1].set_ylabel("Current (A)")
-
-    #axs[1].set_xlim(3595,3800)
-    #axs[1].set_ylim(0,30)
     axs[1].set_title("Current vs Time")
     axs[1].grid(True)
 
@@ -38,7 +35,6 @@ def plot_file(csv_path):
     axs[2].plot(df["Total Time"], df["Step"],linestyle='None',marker='.', markersize=2)
     axs[2].set_xlabel("Total Time (s)")
     axs[2].set_ylabel("Step")
-    #axs[2].set_xlim(3000,6000)
     axs[2].set_title("Step vs Time")
     axs[2].grid(True)
 
@@ -46,12 +42,6 @@ def plot_file(csv_path):
     fig.tight_layout()
     return fig
 
-
-#def plot_all_files():
-    data_folder = Path("Cell_data")
-    files = sorted(data_folder.glob("*.csv"))
-    for file in files:
-        plot_file(file)
 
 def get_cell_files():
     data_folder = Path("Cell_data")

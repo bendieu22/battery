@@ -1,93 +1,219 @@
-# EDF_modelling
+# Data and Modelling Weeks Git Repository README
+
+## Overview
+
+The Git Repository that you have been given access to includes our source code for the 2026 Data and Modelling Weeks. This code was used in order to respond to the problem given to us initially, which was to design a battery pack for an EV model of our choice (with a corresponding range), using the cell Data given to us. The following README will detail how you can use the code that we wrote in order to design our battery pack.
+
+---
+
+## Git Repository Content
+
+- **`Cell_data/`**
+    The experimental data that we were given.
+
+- **`plot_tests.py`**
+    Our code to plot the cell data.
+
+- **`WLTC_data.csv`**
+    The WLTP speed profile data.
+
+- **`power_from_WLTP.py`**
+Our code to study this data with our car model.
+
+- **`R0_OCV_computation.py`**
+    Our code to compute the internal resistance (R0) and open circuit voltage (OCV) at specific current jumps.
+
+- **`SoC_computation.py`**
+Our code to calculate the state of charge (SoC) of a specific cell data file, and extract the SoC before certain current jumps in the test files.
+
+- **`SoC_0thorder_parameters_link.py`**
+Our code to link the Zeroth-order model parameters (OCV and R0 for charge and discharge) to the Soc.
+
+- **`zero_order_energy_consumed.py`**
+Our code to calculate the range and energy consumption of our car for the Zeroth-order circuit model.
+
+- **`socpolarization.py`**
+Our code to calculate the First-order model parameters (R1, C1 and Tau) and link them to the SoC.
+
+- **`energyconsumptionfirstorder.py`**
+Our code to calculate the range and energy consumption of our car for the First-order model.
+
+- **`SoH_degradation.py`**
+Our code to study how the range of the car evolves with a degrading SoH.
+
+- **`GUI.py`**
+Our code that implements the Graphical User Interface.
 
 
+---
 
-## Getting started
+## How to use the repository
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
-
+This following section will describe how to use the python files in the Repository.
+All commands below should be run from the terminal in the **root directory** of the project, using the instructions.
+For the start of every instruction, we will write python and python3.
+On macOS/Linux use python3, on Windows use python.
+If at any point it is unclear what functions and/or arguments can be run in a file, writing the following in your terminal will allow you to see the options available:
+```bash
+python script_name.py -help
+python3 script_name.py -help
 ```
-cd existing_repo
-git remote add origin https://gitlab-student.centralesupelec.fr/lina.skik/edf_modelling.git
-git branch -M main
-git push -uf origin main
+Whenever a specific cell data file name must be called as an argument for a python script, it must be passed using the `--file` argument. The file must be located in the `Cell_data/` folder.
+
+---
+
+## Python scripts
+
+### `plot_tests.py` 
+This script is used to plot the cell data in a specific file located in the `Cell_data/` folder.
+
+To run, for example for the first file:
+```bash
+python plot_tests.py --file CELL_E_TEST_00.csv
+python3 plot_tests.py --file CELL_E_TEST_00.csv
 ```
 
-## Integrate with your tools
+### `power_from_WLTP.py`
+This script calculates all the parameters that we can extract from the WLTP, taking into account the forces in our car model. It then uses this data to plot multiple graphs.
 
-- [ ] [Set up project integrations](https://gitlab-student.centralesupelec.fr/lina.skik/edf_modelling/-/settings/integrations)
+The script requires **one positional argument** called `plot_type`, which selects the plot to display.
 
-## Collaborate with your team
+Valid options are:
+- `speed` — WLTP speed profile
+- `total` — WLTP Power demand taking all possible forces into account
+- `mechanical` — Mechanical power of driveshaft
+- `battery` — Battery power demand
+- `components` — Plots two Power curves on the same graph. "WLTP forces" includes only the car's acceleration and rolling resistance, while "Total Forces" includes all possible forces that can be added to the code (aerodymic drag and a slope).
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+To run:
+``` bash
+python power_from_WLTP.py speed
+python3 power_from_WLTP.py speed
+```
 
-## Test and Deploy
+Should you wish the change the mass of the car, wind speed or angle of slope that the car is on, this can be done in line 151 of the file.
 
-Use the built-in continuous integration in GitLab.
+### `R0_OCV_computation.py`
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+This script computes the **open circuit voltage (OCV)** and **internal resistance (R0)** from experimental cell data files by analyzing current jumps, both for discharging current jumps and charging current jumps. It then outputs a dictionary with as key the file number ('file 0' for `CELL_E_TEST_00.csv`), and as corresponding value a list full of tuples. Each tuple represents a certain current jump, followed by its corresponding R0 and then OCV computed during the jump and just before it respectively. 
 
-***
+To run:
+```bash
+python R0_OCV_computation.py --file CELL_E_TEST_00.csv
+python3 R0_OCV_computation.py --file CELL_E_TEST_00.csv
+```
 
-# Editing this README
+### `SoC_computation.py`
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+This script computes the overall capacity of each cell, as well as state of charge identified just before each of the current jumps where R0 and OCV are calculated in the previous script. It does this by evaluating the decrease in capacity from constant discharging currents between current jumps, and relating that to the overall capacity of the cell. Again it outputs a dictionary with as key the file number ('file 0' for `CELL_E_TEST_00.csv`), and as corresponding value a list full of tuples. Each tuple represents a certain current jump, followed by the corresponding SoC just before that jump.
 
-## Suggestions for a good README
+To run:
+```bash
+python SoC_computation.py --file CELL_E_TEST_00.csv
+python3 SoC_computation.py --file CELL_E_TEST_00.csv
+```
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+### `SoC_0thorder_parameters_link.py`
 
-## Name
-Choose a self-explaining name for your project.
+This script plots **open-circuit voltage (OCV)** and **internal resistance (R0)** as functions of the **state of charge (SoC)**, either as raw data points or as interpolated curves. It does this by linking the results of the two previous scripts into a single dictionary.
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+#### Required arguments
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+- **`plot_type`** : selects the type of plot to display  
+  Valid options:
+  - `OCV_points` — OCV vs SoC (raw extracted points)
+  - `R0_points` — R0 for charging and discharging current jumps vs SoC (raw extracted points)
+  - `OCV_full` — OCV vs SoC (interpolated curve)
+  - `R0_full` — R0 vs SoC (interpolated curve)
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+- **`--file`** : path to the cell CSV file  
+  Example: `Cell_data/CELL_E_TEST_04.csv`
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+#### Optional arguments
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+- **`--mult`**: multiplier applied to OCV or R0 values  
+  Default value: `1.0`
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+Examples to run:
+```bash 
+python SoC_0thorder_parameters_link.py OCV_points --file CELL_E_TEST_04.csv
+python3 SoC_0thorder_parameters_link.py OCV_points --file CELL_E_TEST_04.csv
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+python SoC_0thorder_parameters_link.py OCV_full --file CELL_E_TEST_04.csv --mult 1.1
+python3 SoC_0thorder_parameters_link.py OCV_full --file CELL_E_TEST_04.csv --mult 1.1
+```
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+### `zero_order_energy_consumed.py`
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+This script runs a **battery energy consumption simulation** using the **zeroth-order equivalent circuit model** and generates a selected plot based on your choice. It does this by using an iterative model where at each second it extracts the power demand of the WLTP, computes the cell's ECM parameters from the SoC, and therefore finds a current and voltage that matches that power demand. It then also enables this to be scaled for a battery pack with any number of cells in series and parallel. These, and other parameters like an R0 coefficient, OCV coefficient, initial SoC, and car parameters, can be changed on line 133 of the code. This enabled us to find the battery pack necessary for our car to last for our desired 300 km range.
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+#### Required arguments
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+- **`plot_type`**: selects the type of plot to generate  
+  Valid options:
+  - `current` — battery current as a function of time
+  - `voltage` — battery terminal voltage as a function of time
+  - `soc` — state of charge (SoC) as a function of distance
 
-## License
-For open source projects, say how it is licensed.
+The name of the test CSV file to use must also be added as usual.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+To run:
+```bash
+python zero_order_energy_consumed.py current --file CELL_E_TEST_00.csv
+python3 zero_order_energy_consumed.py current --file CELL_E_TEST_00.csv
+```
+
+### `socpolarization.py`
+
+This script plots the **polarization resistance R1** as a function of the **state of charge (SoC)** for a given cell test file. It does this by identifying the current plateau just after a current jump, and looking at the corresponding voltage change. An exponential fit is then computed for that voltage change, corresponding to the polarization effect, which is due to the RC branch of the First-order model. From that exponential fit we can extract the Resistance (R1) of the branch, as well as the time constant tau. Tau can be found by finding how much time it takes for the Voltage to reach 63% of its maximum value relative to the initial Voltage when the current plateau starts. We can then find the Capacitance (C1) of the RC branch by diving tau by R1. 
+
+The name of the test CSV file to use must also be added as usual.
+
+To run:
+```bash
+python socpolarization.py --file CELL_E_TEST_00.csv
+python3 socpolarization.py --file CELL_E_TEST_00.csv
+```
+
+### `energyconsumptionfirstorder.py`
+
+This script runs a **battery energy consumption simulation** for a given cell test file using the First-order ECM, and its parameters obtained in the previous script. It does this with the same core code as `zero_order_energy_consumed.py`, however it also adds to this an iterative model of the polarization voltage. The polarization voltage is calculated using the equation V = IR(1-exp(-t/tau)), where the time represents a time step between two calculations (1 second), and this voltage is added to the value of the polarization voltage calculated at the previous time value. This code outputs the energy consumed by the battery pack, and the distance that the car can travel under the chosen configuration (110 cells in series with two parallel branches).
+
+The name of the test CSV file to use must also be added as usual.
+
+To run:
+```bash
+python energyconsumptionfirstorder.py --file CELL_E_TEST_00.csv
+python3 energyconsumptionfirstorder.py --file CELL_E_TEST_00.csv
+```
+
+### `SoH_degradation.py`
+
+This script estimates the **State of Health (SoH)** of each experimental cell data file (based on capacity) and evaluates how the **vehicle range** evolves as SoH decreases. It then plots **Range vs SoH**.
+
+To run:
+```bash
+python SoH_degration.py
+python3 SoH_degration.py
+```
+
+### `GUI.py`
+
+This script codes the Graphical User Interface, which uses data from previous python scripts to plot significant results, as well as to allow sensitivity analysis to be displayed.
+To run this Graphical User Interface, streamlit must be installed, which can be done with the following code:
+
+```bash
+pip install streamlit
+pip3 install streamlit
+```
+
+To run:
+```bash
+python -m streamlit run GUI.py
+python3 -m streamlit run GUI.py
+```
+
+----
+
+
+You have now reached the end of this README detailing our project Git Repository.

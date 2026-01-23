@@ -54,7 +54,7 @@ def soc_by_spike(csv_path) :
         SOC_drop = current_capacity / overall_capacity(csv_path) * 100
         
         # Get a list of : (spike, SoC at that spike)
-        tot_SOC = tot_SOC - SOC_drop
+        tot_SOC = float(tot_SOC - SOC_drop)
         soc_list.append((i, tot_SOC))
         
     return {cells_dictionary[str(csv_path)]: soc_list}

@@ -127,10 +127,8 @@ def plot_battery_power(results):
 def plot_power_components(results):
     fig, ax = plt.subplots(figsize=(10, 4))
     t = results["time"]
-    ax.plot(t, results["power_total"], label='Total', color='blue', alpha=0.9, linestyle = 'None', marker = '.')
-    ax.plot(t, results["power_acc_aero_roll"], label='+ Rolling', color='green', alpha=0.8, linestyle = 'None', marker = '.')
-    ax.plot(t, results["power_acc_roll"], label='+ Roll', color='magenta', alpha=0.7, linestyle = 'None', marker = '.')
-    #ax.plot(t, results["power_acc_only"], label='Acc Only', color='blue', alpha=0.6, linestyle = 'None', marker = '.')
+    ax.plot(t, results["power_acc_roll"], label='WLTP forces', color='magenta', alpha=0.7, linestyle = 'None', marker = '.')
+    ax.plot(t, results["power_total"], label='Total forces', color='blue', alpha=0.9, linestyle = 'None', marker = '.')
     
     ax.set_title("Evolution of Power Components")
     ax.legend()

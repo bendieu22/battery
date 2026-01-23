@@ -70,9 +70,9 @@ def energy_consumption_cell(csv_path, number_series_cells, number_parallel_cells
     dt = 1.0
     # ------------------------------------------
 
-    while SOC_now[-1]>5: #SOC never reaches 0
+    while SOC_now[-1]>1: #SOC never reaches 0
         power_demand= p_batt[t_now%1801]
-        distance_list.append(distance_demand[t_now%1801]+distance_list[-1]) #add speed to previous distance, dt=1, so distance += speed*1s
+        distance_list.append(float(distance_demand[t_now%1801]+distance_list[-1])) #add speed to previous distance, dt=1, so distance += speed*1s
 
         ocv_cell = ocv_interp(SOC_now[-1])
         ocv_now = ocv_cell*number_series_cells*OCV_coefficient
@@ -108,12 +108,7 @@ def energy_consumption_cell(csv_path, number_series_cells, number_parallel_cells
         
         
 
-    t_list = list(range(1,t_now+1))
-    # fig, ax = plt.subplots(figsize = (10,4))
-    # ax.plot(t_list, U_list)
-    # ax.grid(True)
-    # plt.show()
-    return t_now, energy_consumed, SOC_now[-1]
+    return energy_consumed, distance_list[-1]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Plot Cell Data Files")

@@ -112,8 +112,6 @@ def plot_current_time(results):
     ax.grid(True)
     return fig
 
-# if __name__ == "__main__":
-#     energy_consumption_cell('Cell_data/CELL_E_TEST_00.csv',110,2,1,1,100,1502,0,0)
 
 if __name__ == "__main__":
     # 2. Set up the argument parser

@@ -220,17 +220,21 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    if not Path(args.file).exists():
+    file_path = Path("Cell_data") / args.file
+
+    if not Path(file_path).exists():
         print(f"Error: File '{args.file}' not found.")
         exit()
 
+    
+
     if args.plot_type == "OCV_points":
-        plot_OCV_SOC(args.file, args.mult)
+        plot_OCV_SOC(file_path, args.mult)
     elif args.plot_type == "R0_points":
-        plot_R0_SOC(args.file, args.mult)
+        plot_R0_SOC(file_path, args.mult)
     elif args.plot_type == "OCV_full":
-        plot_ocv_soc_full_link(args.file, args.mult)
+        plot_ocv_soc_full_link(file_path, args.mult)
     elif args.plot_type == "R0_full":
-        plot_R0_soc_full_link(args.file, args.mult)
+        plot_R0_soc_full_link(file_path, args.mult)
 
     plt.show()
