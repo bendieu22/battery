@@ -3,6 +3,10 @@
 ## Overview
 
 The Git Repository that you have been given access to includes our source code for the 2026 Data and Modelling Weeks EDF project. This code was used in order to respond to the problem given to us initially, which was to design a battery pack for an EV model of our choice (with a corresponding range), using the cell data given to us. The following README will detail how you can use the code that we wrote in order to design our battery pack.
+The Git Repository can be cloned into your working repository with the following code:
+```bash
+git clone https://gitlab-student.centralesupelec.fr/lina.skik/edf_modelling.git
+```
 
 ---
 
