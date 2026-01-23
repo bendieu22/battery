@@ -50,15 +50,17 @@ Our code that implements the Graphical User Interface.
 ## How to use the repository
 
 This following section will describe how to use the python files in the Repository.
-All commands below should be run from the terminal in the **root directory** of the project, using the instructions.
-For the start of every instruction, we will write python and python3.
+All commands below should be run from the terminal in the **root directory** of the project, using the instructions given.
+
+For every instruction, we will write python and python3.
 On macOS/Linux use python3, on Windows use python.
+
 If at any point it is unclear what functions and/or arguments can be run in a file, writing the following in your terminal will allow you to see the options available:
 ```bash
 python script_name.py -help
 python3 script_name.py -help
 ```
-Whenever a specific cell data file name must be called as an argument for a python script, it must be passed using the `--file` argument. The file must be located in the `Cell_data/` folder.
+Whenever a specific cell data file name must be called as an argument for a python script, it must be passed using the `--file` argument. The file must be located in the `Cell_data/` folder. For the first file it should therefore look like this: `--file CELL_E_TEST_00.csv`
 
 ---
 
@@ -91,7 +93,7 @@ python power_from_WLTP.py speed
 python3 power_from_WLTP.py speed
 ```
 
-Should you wish the change the mass of the car, wind speed or angle of slope that the car is on, this can be done in line 151 of the file.
+Should you wish the change the mass of the car, wind speed or angle of slope that the car is on, this can be done in line 151 of the file or in the GUI.
 
 ### `R0_OCV_computation.py`
 
