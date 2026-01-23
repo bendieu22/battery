@@ -10,7 +10,7 @@ import SoC_computation
 import SoC_0thorder_parameters_link
 import socpolarization
 import energyconsumptionfirstorder
-
+import SoH_degradation
 files = plot_tests.get_cell_files()
 
 st.title("Renault Zoe Battery Simulation")
@@ -113,6 +113,12 @@ fig_cell = plot_tests.plot_file(filepath)
 st.pyplot(fig_cell)
 
 st.write("The capacity of this cell is ", str(capacity), "Ah.")
+
+
+st.write("#### State of Charge of the tests")
+
+figSOH = SoH_degradation.plot_range_against_soh()
+st.pyplot(figSOH)
 
 col_plots, col_info = st.columns([2, 1], gap="medium")
 with col_plots:

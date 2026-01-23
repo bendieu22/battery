@@ -65,7 +65,6 @@ if __name__ == "__main__":
 
         file_path = Path("Cell_data") / args.file
         
-        print(f"Plotting {file_path}...")
         plot_file(file_path)
 
     plt.show()

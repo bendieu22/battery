@@ -153,14 +153,14 @@ def extract_step9_plateaus_fixed_tau(data_folder):
 
     return df_results
 
-
-
 # ---------------- Run extraction ----------------
-df_results = extract_step9_plateaus_fixed_tau(DATA_FOLDER)
-df_soc = soc_df_all(DATA_FOLDER)
+if __name__ == "__main__":
+    # ---------------- Run extraction ----------------
+    df_results = extract_step9_plateaus_fixed_tau(DATA_FOLDER)
+    df_soc = soc_df_all(DATA_FOLDER)
 
-# ---------------- Merge SoC with parameters ----------------
-df_merged = pd.merge(df_results, df_soc, on=["file", "pulse_id"], how="inner")
+    # ---------------- Merge SoC with parameters ----------------
+    df_merged = pd.merge(df_results, df_soc, on=["file", "pulse_id"], how="inner")
 
 # ---------------- Plot R_pol vs SoC ----------------
 def plot_SOC_R1(csv_path, coefficient=1.0):
@@ -169,7 +169,7 @@ def plot_SOC_R1(csv_path, coefficient=1.0):
     coefficient: scaling factor for R_pol
     """
 
-    # csv_path = Path(DATA_FOLDER) / f"{cell_name}.csv"
+    csv_path = Path(csv_path) 
     cell_name = csv_path.stem
     if not csv_path.exists():
         raise FileNotFoundError(f"{csv_path} not found")
@@ -208,23 +208,36 @@ def plot_SOC_R1(csv_path, coefficient=1.0):
     fig.tight_layout()
     return fig
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Plot SoC against R1")
-    
-    parser.add_argument(
-        "--file", 
-        help="Filename to plot (e.g., CELL_E_TEST_00.csv). If omitted, plots all files in Cell_data folder.",
-        default=None
-    )
-    
-    args = parser.parse_args()
+#print (plot_SOC_R1("CELL_E_TEST_00", 1))
 
-    if args.file:
 
-        file_path = Path("Cell_data") / args.file
-        
-        fig = plot_SOC_R1(file_path) 
-        plt.gca().invert_xaxis()
-        plt.show()
+"""def plot_SOC_C1():
+    plt.figure(figsize=(8,5))
+    for file in df_merged["file"].unique():
+        df_f = df_merged[df_merged["file"] == file]
+        plt.plot(df_f["SoC"], df_f["C_pol"], 'o-', label=file)
+    plt.xlabel("State of Charge (%)")
+    plt.ylabel("C_pol (F)")
+    plt.title("Polarization capacitance vs SoC")
+    plt.gca().invert_xaxis()
+    plt.grid(True)
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+
+# ---------------- Plot tau vs SoC ----------------
+def plot_SOC_tau():
+    plt.figure(figsize=(8,5))
+    for file in df_merged["file"].unique():
+        df_f = df_merged[df_merged["file"] == file]
+        plt.plot(df_f["SoC"], df_f["tau"], 'o-', label=file)
+    plt.xlabel("State of Charge (%)")
+    plt.ylabel("Tau (s)")
+    plt.title("Time constant vs SoC")
+    plt.gca().invert_xaxis()
+    plt.grid(True)
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
 
 
