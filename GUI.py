@@ -115,7 +115,7 @@ st.pyplot(fig_cell)
 st.write("The capacity of this cell is ", str(capacity), "Ah.")
 
 
-st.write("#### State of Charge of the tests")
+st.write("#### State of Health of the tests")
 
 figSOH = SoH_degradation.plot_range_against_soh()
 st.pyplot(figSOH)
@@ -140,7 +140,7 @@ with col_plots:
         st.pyplot(fig_comp)
 
 with col_info:
-    st.write("### Simulation Stats")
+    st.write("#### Simulation Stats")
     
     st.write("**Cycle Type:** WLTP Class 3")
     st.write("**Total Duration:** 1800 s")
@@ -193,5 +193,5 @@ with col_2:
     st.write("### 1st Order")
     fig_R1_SOC= socpolarization.plot_SOC_R1(filepath, R1_multiplier)
     st.pyplot(fig_R1_SOC)
-    energy = energyconsumptionfirstorder.energy_consumption_cell(filepath, N_series, N_parallel, R0_multiplier, R1_multiplier, OCV_multipler, SOC, total_mass, wind_ms, theta_rad)[1]
+    energy = energyconsumptionfirstorder.energy_consumption_cell(filepath, N_series, N_parallel, R0_multiplier, R1_multiplier, OCV_multipler, SOC, total_mass, wind_ms, theta_rad)[0]
     st.write(" The energy that is consumable in the 1st order model is: ", str(round(energy, 1)), "kW")    

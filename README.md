@@ -61,6 +61,8 @@ On macOS/Linux use python3, on Windows use python.
 If at any point it is unclear what functions and/or arguments can be run in a file, writing the following in your terminal will allow you to see the options available:
 ```bash
 python script_name.py -help
+```
+```bash
 python3 script_name.py -help
 ```
 Whenever a specific cell data file name must be called as an argument for a python script, it must be passed using the `--file` argument. The file must be located in the `Cell_data/` folder. For the first file it should therefore look like this: `--file CELL_E_TEST_00.csv`
@@ -75,6 +77,8 @@ This script is used to plot the cell data in a specific file located in the `Cel
 To run, for example for the first file:
 ```bash
 python plot_tests.py --file CELL_E_TEST_00.csv
+```
+```bash
 python3 plot_tests.py --file CELL_E_TEST_00.csv
 ```
 
@@ -93,6 +97,8 @@ Valid options are:
 To run:
 ``` bash
 python power_from_WLTP.py speed
+```
+```bash
 python3 power_from_WLTP.py speed
 ```
 
@@ -105,6 +111,8 @@ This script computes the **open circuit voltage (OCV)** and **internal resistanc
 To run:
 ```bash
 python R0_OCV_computation.py --file CELL_E_TEST_00.csv
+```
+```bash
 python3 R0_OCV_computation.py --file CELL_E_TEST_00.csv
 ```
 
@@ -115,6 +123,8 @@ This script computes the overall capacity of each cell, as well as state of char
 To run:
 ```bash
 python SoC_computation.py --file CELL_E_TEST_00.csv
+```
+```bash
 python3 SoC_computation.py --file CELL_E_TEST_00.csv
 ```
 
@@ -142,9 +152,15 @@ This script plots **open-circuit voltage (OCV)** and **internal resistance (R0)*
 Examples to run:
 ```bash 
 python SoC_0thorder_parameters_link.py OCV_points --file CELL_E_TEST_04.csv
+```
+```bash
 python3 SoC_0thorder_parameters_link.py OCV_points --file CELL_E_TEST_04.csv
+```
 
+```bash
 python SoC_0thorder_parameters_link.py OCV_full --file CELL_E_TEST_04.csv --mult 1.1
+```
+```bash
 python3 SoC_0thorder_parameters_link.py OCV_full --file CELL_E_TEST_04.csv --mult 1.1
 ```
 
@@ -165,6 +181,8 @@ The name of the test CSV file to use must also be added as usual.
 To run:
 ```bash
 python zero_order_energy_consumed.py current --file CELL_E_TEST_00.csv
+```
+```bash
 python3 zero_order_energy_consumed.py current --file CELL_E_TEST_00.csv
 ```
 
@@ -177,6 +195,8 @@ The name of the test CSV file to use must also be added as usual.
 To run:
 ```bash
 python socpolarization.py --file CELL_E_TEST_00.csv
+```
+```bash
 python3 socpolarization.py --file CELL_E_TEST_00.csv
 ```
 
@@ -189,6 +209,8 @@ The name of the test CSV file to use must also be added as usual.
 To run:
 ```bash
 python energyconsumptionfirstorder.py --file CELL_E_TEST_00.csv
+```
+```bash
 python3 energyconsumptionfirstorder.py --file CELL_E_TEST_00.csv
 ```
 
@@ -199,6 +221,8 @@ This script estimates the **State of Health (SoH)** of each experimental cell da
 To run:
 ```bash
 python SoH_degration.py
+```
+```bash
 python3 SoH_degration.py
 ```
 
@@ -209,12 +233,16 @@ To run this Graphical User Interface, streamlit must be installed, which can be 
 
 ```bash
 pip install streamlit
+```
+```bash
 pip3 install streamlit
 ```
 
 To run:
 ```bash
 python -m streamlit run GUI.py
+```
+```bash
 python3 -m streamlit run GUI.py
 ```
 
