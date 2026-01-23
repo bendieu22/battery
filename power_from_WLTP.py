@@ -97,6 +97,7 @@ def plot_speed(results):
     ax.plot(results["time"], results["speed_ms"], color='black', linestyle = 'None', marker = '.')
     ax.set_title("WLTP Speed Profile")
     ax.set_ylabel("Speed (m/s)")
+    ax.set_xlabel("Time (s)")
     ax.grid(True)
     return fig
 
@@ -105,6 +106,7 @@ def plot_total_power(results):
     ax.plot(results["time"], results["power_total"], color='blue', linestyle = 'None', marker = '.')
     ax.set_title("Total Power vs Time")
     ax.set_ylabel("Power (W)")
+    ax.set_xlabel("Time (s)")
     ax.grid(True)
     return fig
 
@@ -113,6 +115,7 @@ def plot_mechanical_power(results):
     ax.plot(results["time"], results["p_mech"], color='blue', linestyle = 'None', marker = '.')
     ax.set_title("Mechanical Power vs Time")
     ax.set_ylabel("Power (W)")
+    ax.set_xlabel("Time (s)")
     ax.grid(True)
     return fig
 
@@ -121,6 +124,7 @@ def plot_battery_power(results):
     ax.plot(results["time"], results["p_batt"], color='blue', linestyle = 'None', marker = '.')
     ax.set_title("Battery Power vs Time")
     ax.set_ylabel("Power (W)")
+    ax.set_xlabel("Time (s)")
     ax.grid(True)
     return fig
 
@@ -131,6 +135,7 @@ def plot_power_components(results):
     ax.plot(t, results["power_total"], label='Total forces', color='blue', alpha=0.9, linestyle = 'None', marker = '.')
     
     ax.set_title("Evolution of Power Components")
+    ax.set_xlabel("Time (s)")
     ax.legend()
     ax.grid(True)
     return fig

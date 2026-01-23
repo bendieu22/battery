@@ -223,5 +223,7 @@ if __name__ == "__main__":
 
         file_path = Path("Cell_data") / args.file
         
-        print(plot_SOC_R1(file_path))
+        fig = plot_SOC_R1(file_path)
+        plt.gca().invert_xaxis()
+        plt.show()
 

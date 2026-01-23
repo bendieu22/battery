@@ -158,10 +158,10 @@ python3 SoC_0thorder_parameters_link.py OCV_points --file CELL_E_TEST_04.csv
 ```
 
 ```bash
-python SoC_0thorder_parameters_link.py OCV_full --file CELL_E_TEST_04.csv --mult 1.1
+python SoC_0thorder_parameters_link.py R0_points --file CELL_E_TEST_04.csv --mult 1.1
 ```
 ```bash
-python3 SoC_0thorder_parameters_link.py OCV_full --file CELL_E_TEST_04.csv --mult 1.1
+python3 SoC_0thorder_parameters_link.py R0_points --file CELL_E_TEST_04.csv --mult 1.1
 ```
 
 ### `zero_order_energy_consumed.py`
@@ -180,10 +180,10 @@ The name of the test CSV file to use must also be added as usual.
 
 To run:
 ```bash
-python zero_order_energy_consumed.py current --file CELL_E_TEST_00.csv
+python zero_order_energy_consumed.py soc --file CELL_E_TEST_00.csv
 ```
 ```bash
-python3 zero_order_energy_consumed.py current --file CELL_E_TEST_00.csv
+python3 zero_order_energy_consumed.py soc --file CELL_E_TEST_00.csv
 ```
 
 ### `socpolarization.py`
@@ -202,7 +202,7 @@ python3 socpolarization.py --file CELL_E_TEST_00.csv
 
 ### `energyconsumptionfirstorder.py`
 
-This script runs a **battery energy consumption simulation** for a given cell test file using the First-order ECM, and its parameters obtained in the previous script. It does this with the same core code as `zero_order_energy_consumed.py`, however it also adds to this an iterative model of the polarization voltage. The polarization voltage is calculated using the equation V = IR(1-exp(-t/tau)), where the time represents a time step between two calculations (1 second), and this voltage is added to the value of the polarization voltage calculated at the previous time value. This code outputs the energy consumed by the battery pack, and the distance that the car can travel under the chosen configuration (110 cells in series with two parallel branches).
+This script runs a **battery energy consumption simulation** for a given cell test file using the First-order ECM, and its parameters obtained in the previous script. It does this with the same core code as `zero_order_energy_consumed.py`, however it also adds to this an iterative model of the polarization voltage. The polarization voltage is calculated using the equation V = IR(1-exp(-t/tau)), where the time represents a time step between two calculations (1 second), and this voltage is added to the value of the polarization voltage calculated at the previous time value. This code outputs the energy consumed by the battery pack in kWh, and the distance that the car can travel under the chosen configuration (110 cells in series with two parallel branches) in metres.
 
 The name of the test CSV file to use must also be added as usual.
 
@@ -220,10 +220,10 @@ This script estimates the **State of Health (SoH)** of each experimental cell da
 
 To run:
 ```bash
-python SoH_degration.py
+python SoH_degradation.py
 ```
 ```bash
-python3 SoH_degration.py
+python3 SoH_degradation.py
 ```
 
 ### `GUI.py`
