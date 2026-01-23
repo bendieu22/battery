@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Git Repository that you have been given access to includes our source code for the 2026 Data and Modelling Weeks. This code was used in order to respond to the problem given to us initially, which was to design a battery pack for an EV model of our choice (with a corresponding range), using the cell Data given to us. The following README will detail how you can use the code that we wrote in order to design our battery pack.
+The Git Repository that you have been given access to includes our source code for the 2026 Data and Modelling Weeks EDF project. This code was used in order to respond to the problem given to us initially, which was to design a battery pack for an EV model of our choice (with a corresponding range), using the cell data given to us. The following README will detail how you can use the code that we wrote in order to design our battery pack.
 
 ---
 
@@ -12,7 +12,7 @@ The Git Repository that you have been given access to includes our source code f
     This is the file that details how to use the Git repository.
 
 - **`Cell_data/`**
-    The experimental data that we were given.
+    The folder containing the experimental data that we were given.
 
 - **`plot_tests.py`**
     Our code to plot the cell data.
