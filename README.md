@@ -8,6 +8,9 @@ The Git Repository that you have been given access to includes our source code f
 
 ## Git Repository Content
 
+- **`README.md`
+    This is the file that details how to use the Git repository.
+
 - **`Cell_data/`**
     The experimental data that we were given.
 
@@ -147,7 +150,7 @@ python3 SoC_0thorder_parameters_link.py OCV_full --file CELL_E_TEST_04.csv --mul
 
 ### `zero_order_energy_consumed.py`
 
-This script runs a **battery energy consumption simulation** using the **zeroth-order equivalent circuit model** and generates a selected plot based on your choice. It does this by using an iterative model where at each second it extracts the power demand of the WLTP, computes the cell's ECM parameters from the SoC, and therefore finds a current and voltage that matches that power demand. It then also enables this to be scaled for a battery pack with any number of cells in series and parallel. These, and other parameters like an R0 coefficient, OCV coefficient, initial SoC, and car parameters, can be changed on line 133 of the code. This enabled us to find the battery pack necessary for our car to last for our desired 300 km range.
+This script runs a **battery energy consumption simulation** using the **zeroth-order equivalent circuit model** and generates a selected plot based on your choice. It does this by using an iterative model where at each second it extracts the power demand of the WLTP, computes the cell's ECM parameters from the SoC, and therefore finds a current and voltage that matches that power demand. It then also enables this to be scaled for a battery pack with any number of cells in series and parallel. These, and other parameters like an R0 coefficient, OCV coefficient, initial SoC, and car parameters, can be changed on line 133 of the code, or in the GUI. This enabled us to find the battery pack necessary for our car to last for our desired 300 km range.
 
 #### Required arguments
 
@@ -167,7 +170,7 @@ python3 zero_order_energy_consumed.py current --file CELL_E_TEST_00.csv
 
 ### `socpolarization.py`
 
-This script plots the **polarization resistance R1** as a function of the **state of charge (SoC)** for a given cell test file. It does this by identifying the current plateau just after a current jump, and looking at the corresponding voltage change. An exponential fit is then computed for that voltage change, corresponding to the polarization effect, which is due to the RC branch of the First-order model. From that exponential fit we can extract the Resistance (R1) of the branch, as well as the time constant tau. Tau can be found by finding how much time it takes for the Voltage to reach 63% of its maximum value relative to the initial Voltage when the current plateau starts. We can then find the Capacitance (C1) of the RC branch by diving tau by R1. 
+This script plots the **polarization resistance R1** as a function of the **state of charge (SoC)** for a given cell test file. It does this by identifying the current plateau just after a current jump, and looking at the corresponding voltage change. An exponential fit is then computed for that voltage change, corresponding to the polarization effect, which is due to the RC branch of the First-order model. From that exponential fit we can extract the Resistance (R1) of the branch, as well as the time constant tau. Tau can be found by finding how much time it takes for the Voltage to reach 63% of its maximum value relative to the initial Voltage when the current plateau starts. We can then find the Capacitance (C1) of the RC branch by diving tau by R1. In the GUI, a coefficient that is multiplied by R1 can be manipulated to observe how the plot changes.
 
 The name of the test CSV file to use must also be added as usual.
 
